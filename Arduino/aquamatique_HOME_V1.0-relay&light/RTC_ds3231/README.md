@@ -1,6 +1,6 @@
 # librairie pour DS3231
 
-voici une livrairie claire et facile 
+voici une librairie claire et facile 
 
 Elle est produite par :
 ##http://www.rinkydinkelectronics.com
