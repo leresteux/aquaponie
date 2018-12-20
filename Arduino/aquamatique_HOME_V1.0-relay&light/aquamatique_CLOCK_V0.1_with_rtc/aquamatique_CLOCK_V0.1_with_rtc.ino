@@ -60,7 +60,7 @@ void setup() {
   Serial.begin(9600);
     t = rtc.getTime();
   info_start();
-  Serial.println(t.hour, DEC);
+  Serial.println(t.hour);
   if (LED_heure_start <= t.hour && LED_heure_fin > t.hour) {
     lumiere = 1;
     digitalWrite(pin_relay_LED, LOW);// OFF
