@@ -1,29 +1,21 @@
 #include <DS3231.h>
-
 #include <avr/wdt.h>            // Inclusion de la librairie WatchDog
 
 //réglages
 
-
-
 unsigned int tpsON_min = 0, tpsON_sec = 50;                // duree d'arrossage - cycle EAU
 unsigned int tpsOFF_min = 10, tpsOFF_sec = 0;              // duree sans arrossage - cycle AIR
-
 unsigned int LED_heure_start = 5, LED_heure_fin = 17 ;     // heures de debut et de fin de l'eclairage - cycle LUMIERE
-
-
 
 // NE RIEN CHANGER ICI
 
-//interface
+//output
 const unsigned int pin_relay_pompe = 13;
 const unsigned int pin_relay_LED = 12;
-//code
-int tpsON , tpsOFF , nbrCYCLE;
-boolean air, eau, lumiere;
+//var
+int tpsON , tpsOFF;
+boolean lumiere;
 boolean debug = 1;
-
-
 
 // Init the DS3231 using the hardware interface
 DS3231  rtc(SDA, SCL);
@@ -58,59 +50,40 @@ void setup() {
 
   delay(100);
   Serial.begin(9600);
-    t = rtc.getTime();
+
   info_start();
-  Serial.println(t.hour);
-  if (LED_heure_start <= t.hour && LED_heure_fin > t.hour) {
-    lumiere = 1;
-    digitalWrite(pin_relay_LED, LOW);// OFF
-    if (debug) {
-      Serial.println ("LED_ON");
-    }
-  }
-  else {
-    lumiere = 0;
-    digitalWrite(pin_relay_LED, HIGH);// OFF
-    if (debug) {
-      Serial.println ("LED_OFF");
-
-    }
-
-
-
-  }
 }
 
 void loop() {
   t = rtc.getTime();
+  LED();
   Eau();
-
-
   LED();
-
   Air();
-
-
-  LED();
+  
 }
 
 void Eau() {
-  eau = true;
-  air = false;
+  
   delay(100);
-  nbrCYCLE++;
-
+  Serial.println ("Cycle Eau");
   for (int i = 0; i < tpsON; i ++) {
     delay(1000);
     digitalWrite(pin_relay_pompe, LOW);
     wdt_reset();
 
+    if (debug) {
+
+
+      Serial.print (i);
+      Serial.print ("/");
+      Serial.println (tpsON);
+
+    }
   }
 }
 void Air() {
-  eau = false;
-  air = true;
-
+  Serial.println ("Cycle Air");
 
   for (int i = 0; i < tpsOFF; i ++) {
 
@@ -119,6 +92,12 @@ void Air() {
     digitalWrite(pin_relay_pompe, HIGH);
     wdt_reset();
 
+    if (debug) {
+
+      Serial.print (i);
+      Serial.print ("/");
+      Serial.println (tpsOFF);
+    }
 
 
   }
@@ -149,33 +128,40 @@ void LED() {
 }
 
 void info_start() {
-  Serial.println ("AQUAPONIQUE-2018-BY Leresteux Julien");
+  t = rtc.getTime();
+  Serial.println ("AQUAPONIQUE-DEC-2018-BY Leresteux Julien");
+
+  Serial.println (" --- ");
+
+  Serial.print("Il est " );
+  Serial.print(t.hour);
+  Serial.print(":");
+  Serial.println(t.min);
+
   Serial.println (" --- ");
 
   Serial.print ("Debut du cycle lumiere à ");
   Serial.print (LED_heure_start);
-  Serial.print ("H00 --- ");
+  Serial.println ("H00");
+
+  Serial.println (" --- ");
 
   Serial.print ("Fin du cycle lumiere à ");
   Serial.print (LED_heure_fin);
   Serial.println ("H00");
 
   Serial.println (" --- ");
-  Serial.print ("EAU : ");
+  
+  Serial.print ("Durée cycle EAU : ");
   Serial.print  (tpsON_min);
   Serial.print  (" min ");
   Serial.print  (tpsON_sec);
-  Serial.print  (" sec ");
-  Serial.print (" --- ");
-  Serial.print (tpsON);
   Serial.println  (" sec ");
-  Serial.print ("AIR : ");
+  Serial.println (" --- ");
+  Serial.print ("Durée cycle AIR : ");
   Serial.print  (tpsOFF_min);
   Serial.print  (" min ");
   Serial.print  (tpsOFF_sec);
-  Serial.print  (" sec ");
-  Serial.print (" --- ");
-  Serial.print (tpsOFF);
   Serial.println  (" sec ");
   Serial.println (" --- ");
   Serial.println ("setup: ok");
