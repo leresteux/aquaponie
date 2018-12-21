@@ -12,6 +12,8 @@ Pour controler pompe et éclairage
 
 ### 3D prints
 Models 3d imprimables pour raccorder pompe, tube, pour jointer etc
+- en STL
+- en F3D (Fusion360)
 
 
 ### Visuels
