@@ -3,8 +3,8 @@
 
 //réglages
 
-unsigned int tpsON_min = 0, tpsON_sec = 50;                // duree d'arrossage - cycle EAU
-unsigned int tpsOFF_min = 10, tpsOFF_sec = 0;              // duree sans arrossage - cycle AIR
+unsigned int tpsON_min = 0, tpsON_sec = 48;                // duree d'arrossage - cycle EAU
+unsigned int tpsOFF_min = 30, tpsOFF_sec = 0;              // duree sans arrossage - cycle AIR
 unsigned int LED_heure_start = 5, LED_heure_fin = 17 ;     // heures de debut et de fin de l'eclairage - cycle LUMIERE
 
 // NE RIEN CHANGER ICI
@@ -15,7 +15,7 @@ const unsigned int pin_relay_LED = 12;
 //var
 int tpsON , tpsOFF;
 boolean lumiere;
-boolean debug = 1;
+boolean debug = 0;
 
 // Init the DS3231 using the hardware interface
 DS3231  rtc(SDA, SCL);
@@ -67,9 +67,10 @@ void Eau() {
   
   delay(100);
   Serial.println ("Cycle Eau");
+  digitalWrite(pin_relay_pompe, LOW);
   for (int i = 0; i < tpsON; i ++) {
     delay(1000);
-    digitalWrite(pin_relay_pompe, LOW);
+  
     wdt_reset();
 
     if (debug) {
@@ -84,7 +85,7 @@ void Eau() {
 }
 void Air() {
   Serial.println ("Cycle Air");
-
+digitalWrite(pin_relay_pompe, HIGH);
   for (int i = 0; i < tpsOFF; i ++) {
 
 

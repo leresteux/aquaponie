@@ -16,8 +16,8 @@
 //test
 unsigned int heure_start = 16, minute_start = 59;           // heure de branche du systeme
 
-unsigned int tpsON_min = 0, tpsON_sec = 5;                // duree d'arrossage - cycle EAU
-unsigned int tpsOFF_min = 0, tpsOFF_sec = 5;              // duree sans arrossage - cycle AIR
+unsigned int tpsON_min = 0, tpsON_sec = 45;                // duree d'arrossage - cycle EAU
+unsigned int tpsOFF_min = 30, tpsOFF_sec = 0;              // duree sans arrossage - cycle AIR
 
 unsigned int LED_heure_start = 5, LED_heure_fin = 17 ;     // heures de debut et de fin de l'eclairage - cycle LUMIERE
 
@@ -90,10 +90,10 @@ void setup() {
       air = false;
       delay(100);
       nbrCYCLE++;
-
+digitalWrite(pin_relay_pompe, LOW);
+        
       for (int i = 0; i < tpsON; i ++) {
         delay(1000);
-        digitalWrite(pin_relay_pompe, LOW);
         wdt_reset();
 
         if (debug) {
@@ -114,12 +114,12 @@ void setup() {
       eau = false;
       air = true;
 
-
+digitalWrite(pin_relay_pompe, HIGH);
+        
       for (int i = 0; i < tpsOFF; i ++) {
 
 
         delay(1000);
-        digitalWrite(pin_relay_pompe, HIGH);
         wdt_reset();
 
         if (debug) {
